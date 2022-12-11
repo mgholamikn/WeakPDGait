@@ -14,7 +14,7 @@ Required packages:
   <li>snorkel</li>
 </ul> 
 
-To install pytorch3d please follow the instructions at https://github.com/facebookresearch/pytorch3d/blob/master/INSTALL.md
+To install pytorch3d please follow the instructions at <br>https://github.com/facebookresearch/pytorch3d/blob/master/INSTALL.md
 <br>To install snorkel please follow the instructions at <br>https://www.snorkel.org/get-started/ 
 
 # 3D Humna Pose 
