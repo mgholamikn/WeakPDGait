@@ -473,11 +473,6 @@ for ii in range(len(subjects_PD)):
     weights/=np.sum(weights)
 
     data_Y=np.sum(weights*label_matrix,axis=1)
-    # print(data_Y)
-
-    data_Y[data_Y<=(2/8)]=0.0
-    data_Y[data_Y>(2/8)]=1.0
-
     
     data_Y_train=np.delete(Y_true,ii,0)
     data_Y_test=data_Y[ii:ii+1]
