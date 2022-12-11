@@ -15,5 +15,5 @@ python train.py
 
 # PD Labeling
 ```
-train_PD.py
+python train_PD.py
 ```
