@@ -5,3 +5,8 @@ Videos with Weak Supervision".
 <p align="center">.
 <img  src="Figures/tiser.jpg" width="800">
 <p/>
+
+# 3D Humna Pose 
+```
+python
+```
