@@ -8,7 +8,7 @@ Videos with Weak Supervision".
 
 # 3D Humna Pose 
 
-Training on Human3.6M dataset. Please first download the data from here and put in the /data directory.
+Training on Human3.6M dataset. Please first download the data from here and put in the ```/data``` directory.
 ```
 python train.py
 ```
