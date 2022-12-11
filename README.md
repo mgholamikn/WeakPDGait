@@ -19,7 +19,7 @@ To install pytorch3d please follow the instructions at <br>https://github.com/fa
 
 # 3D Humna Pose 
 
-Training on Human3.6M dataset. Please first download the data from <a href="https://www.w3schools.com/">here</a> and put in the ```/data``` directory.
+Training on Human3.6M dataset. Please first download the data from <a href="https://drive.google.com/drive/folders/1YnIYQldiPAphX3gI4yzmbKPeSL_kiD6p?usp=share_link">here</a> and put in the ```/data``` directory.
 ```
 python train.py
 ```
