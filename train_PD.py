@@ -30,7 +30,7 @@ subjects_All_date=['20210223','20191114','20191120','20191112','20191119','20200
 '20200124','20200127','20200130','20200205','20200206_9339','20200207','20200213','20200214','20200218',
 '26','20200221','20210706','20210804','20200206_9629','20210811','20191210','20191212','20191218','20200227']
 healthy_controls=['S08','S20','S27','S25','S26']
-
+Y_true=np.asarray([1,1,0,1,1,0,0,0,1,0,1,0,1,1,1,1,0,0,0,1,1,0,0,1,1,0,1,0,1])
 
 
 plt.rcParams['font.size'] = 10
@@ -315,63 +315,10 @@ for idx,(subj,subj_date) in enumerate(zip(subjects_All,subjects_All_date)):
 
     print(subj,'trunk_rot_l',np.mean(trunk_rot_l))
     print(subj,'trunk_rot_r',np.mean(trunk_rot_r))
- 
-
-    if subj in ['S08','S20','S25','S26','S27']:
-        marker='*'
-    else:
-        marker='o'
-    c1=np.random.rand(1)[0]
-    c2=np.random.rand(1)[0]
-    
-    line=ax[0,0].scatter(np.mean(hand_mov_n_r[:]),np.mean(hand_mov_n_l[:]),color=colors.to_rgb((c1,c2,num/len(subjects_All))),marker=marker,s=160) #:3900 
-    line=ax[0,1].scatter(np.mean(step_length_r[:]),np.mean(step_length_l[:]),color=colors.to_rgb((c1,c2,num/len(subjects_All))),marker=marker,s=160) #:3900 
-    line=ax[0,2].scatter(np.mean(foot_height_n_r[:]),np.mean(foot_height_n_l[:]),color=colors.to_rgb((c1,c2,num/len(subjects_All))),marker=marker,s=160)
-    line=ax[1,0].scatter(np.mean(hip_flex_r[:]),np.mean(hip_flex_l[:]),color=colors.to_rgb((c1,c2,num/len(subjects_All))),marker=marker,s=160) #:3900 
-    line=ax[1,1].scatter(np.mean(knee_flex_r[:]),np.mean(knee_flex_l[:]),color=colors.to_rgb((c1,c2,num/len(subjects_All))),marker=marker,s=160) #:3900 
-    line=ax[1,2].scatter(np.mean(trunk_rot_r[:]),np.mean(trunk_rot_l[:]),color=colors.to_rgb((c1,c2,num/len(subjects_All))),marker=marker,s=160) #:3900 
-    line=ax[2,0].scatter(np.mean(step_width[:]),np.mean(cadence[:]),color=colors.to_rgb((c1,c2,num/len(subjects_All))),marker=marker,s=160) #:3900 
-    line=ax[2,1].scatter(np.mean(hand_mov_n_r[:]),np.mean(hand_mov_n_l[:]),color=colors.to_rgb((c1,c2,num/len(subjects_All))),marker=marker,s=160) #:3900
-    line=ax[2,2].scatter(np.mean(gait_speed[:]),np.std(gait_speed[:]),color=colors.to_rgb((c1,c2,num/len(subjects_All))),marker=marker,s=160) #:3900
 
     num+=1
 print('Average number of samples:',num_sample/num)
-#save
-ax[0,0].set_xlabel('Right Hand Range of Motion')
-ax[0,0].set_ylabel('Left Hand Range of Motion')
 
-
-ax[0,1].set_xlabel('Right Step Length')
-ax[0,1].set_ylabel('Left Step Length')
-
-
-ax[0,2].set_xlabel('Right Foot Lifting')
-ax[0,2].set_ylabel('Left Foot Lifting')
-
-
-ax[1,0].set_xlabel('Right Hip Flexion')
-ax[1,0].set_ylabel('Left Hip Flextion')
-
-ax[1,1].set_xlabel('Right Knee Flexion')
-ax[1,1].set_ylabel('Left Knee Flextion')
-
-ax[1,2].set_xlabel('Right Trunk Rot')
-ax[1,2].set_ylabel('Left Trunk Rot')
-
-ax[2,0].set_xlabel('Step Width')
-ax[2,0].set_ylabel('Cadence')
-
-ax[2,1].set_xlabel('Right Hand Range of Motion')
-ax[2,1].set_ylabel('Left Hand Range of Motion')
-
-ax[2,2].set_xlabel('Gait Speed')
-ax[2,2].set_ylabel('Gait Speed Variation')
-
-fig.legend(subjects_All,loc=7)
-fig.tight_layout()
-fig.subplots_adjust(right=0.95)   
-
-plt.show() 
 
 for subj in subjects_All:
     for ii in range(15):
@@ -401,22 +348,22 @@ data=np.load('output.npz',allow_pickle=True)
 data=data['data'].item()
 threshold_arm_sym_min=1
 threshold_arm_sym_max=1
-threshold_StepL_r=10
-threshold_StepL_l=10
-threshold_footlift_r=10
-threshold_footlift_l=10
-threshold_Hip_r=10
-threshold_Hip_l=10
-threshold_knee_r=10
-threshold_knee_l=10
-threshold_trunk_r=10
-threshold_trunk_l=10
-threshold_stepwidth=0
-threshold_cadence=0
-threshold_handROM_r=10
-threshold_handROM_l=10
-threshold_gait_speed=10
-threshold_gait_speed_var=0
+threshold_StepL_r=1000
+threshold_StepL_l=1000
+threshold_footlift_r=1000
+threshold_footlift_l=1000
+threshold_Hip_r=1000
+threshold_Hip_l=1000
+threshold_knee_r=1000
+threshold_knee_l=1000
+threshold_trunk_r=1000
+threshold_trunk_l=1000
+threshold_stepwidth=-1000
+threshold_cadence=-1000
+threshold_handROM_r=1000
+threshold_handROM_l=1000
+threshold_gait_speed=1000
+threshold_gait_speed_var=-1000
 ## setting thresholod
 
 for subj in healthy_controls:
@@ -504,9 +451,7 @@ from snorkel.labeling.model import LabelModel
 
 print(label_matrix)
 print(np.sum(label_matrix,axis=1))
-Y_true=np.asarray([1,1,0,1,1,0,0,0,0,1,0,1,0,1,1,1,1,0,0,0,0,1,1,0,0,0,0,0,1,1,0,1,0,1])
-Y_true=np.asarray(   [1,1,0,1,1,0,0,0,1,0   ,1,0,1,1,1,1,0,0,0,1,1,0,0,1,1,0,1,0,1])
-Y_pred_Lu=np.asarray([0.95,0.90,0.15,0.14,0.93,0.11,0.16,0.89,0.97,0.57,0.8,0.10,0.70,0.8,0.90,0.79,0.16,0.75,0.18,0.69,0.95,0.1,0.96,0.86,0.96,0.61,0.62,0.55,0.85])
+
 Y_pred=np.zeros(len(subjects_PD))
 jj=0
 data_X=np.zeros((len(subjects_PD),30))
