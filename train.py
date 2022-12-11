@@ -110,7 +110,7 @@ for subject in dataset_test.keys():
                 # Shorten sequence
                 keypoints[subject][action_corrected][cam_idx] = keypoints[subject][action_corrected][cam_idx][:mocap_length]
 
-###### keypoints and confidences
+
 error=0
 confidences={}
 N=0
@@ -141,7 +141,7 @@ for subject in dataset_test.keys():
             keypoints[subject][action_corrected][cam_idx] = kps
             confidences[subject][action_corrected][cam_idx] = conf
 
-####################################
+
 def fetch(subjects, action_filter=None, subset=1, parse_3d_poses=True):
     out_poses_3d = []
     out_poses_2d = []
