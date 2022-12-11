@@ -6,6 +6,18 @@ Videos with Weak Supervision".
 <img  src="Figures/tiser.jpg" width="800">
 <p/>
 
+# Environment
+Required packages:
+<ul>
+  <li>Coffee</li>
+  <li>Tea</li>
+  <li>Milk</li>
+</ul> 
+
+pytorch
+pytorch3d
+To install pytorch3d please follow the instructions at https://github.com/facebookresearch/pytorch3d/blob/master/INSTALL.md
+
 # 3D Humna Pose 
 
 Training on Human3.6M dataset. Please first download the data from here and put in the ```/data``` directory.
