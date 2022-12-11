@@ -25,7 +25,7 @@ python train.py
 ```
 
 # PD Labeling
-We can not provide our PD data due to the privacy issues. You can use your own data to train the netwrok. Instrucitons on preparing custom data will be added.
+We can not provide our PD data due to the privacy issues. You can use your own data to train the network. Instrucitons on preparing custom data will be added.
 ```
 python train_PD.py
 ```
