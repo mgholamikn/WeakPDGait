@@ -9,13 +9,10 @@ Videos with Weak Supervision".
 # Environment
 Required packages:
 <ul>
-  <li>Coffee</li>
-  <li>Tea</li>
-  <li>Milk</li>
+  <li>pytorch</li>
+  <li>pytorch3d</li>
 </ul> 
 
-pytorch
-pytorch3d
 To install pytorch3d please follow the instructions at https://github.com/facebookresearch/pytorch3d/blob/master/INSTALL.md
 
 # 3D Humna Pose 
