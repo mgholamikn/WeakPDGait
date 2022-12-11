@@ -12,3 +12,8 @@ Training on Human3.6M dataset. Please first download the data from here and put 
 ```
 python train.py
 ```
+
+# PD Labeling
+```
+train_PD.py
+```
