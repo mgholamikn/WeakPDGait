@@ -39,7 +39,6 @@ joints_15sh=[6,3,4,5,2,1,0,8,8,9,12,11,10,13,14,15]
 triangulated_poses=np.load('data/triangulated_3d_h36m_ap.npz',allow_pickle=True)
 triangulated_poses=triangulated_poses['positions_3d'].item()
 
-# dataset_test = Human36mDataset('data/data_3d_h36m_ap.npz')
 dataset_test = np.load('data/data_3d_h36m_ap.npz',allow_pickle=True)
 dataset_test = dataset_test['positions_3d'].item()
 print('Bone Length Calulation...')
@@ -65,18 +64,16 @@ for subject in dataset_test.keys():
 
         for cam in range(4):
 
-            # pos_3d = world_to_camera(anim['positions'], R=cam['orientation'], t=cam['translation'])
             pos_3d = anim[ii]
             pos_3d = pos_3d-pos_3d[:, 0:1,:] # Remove global offset, but keep trajectory in first position
-            # pos_3d=pos_3d[:,joints16]
             positions_3d.append(pos_3d)
 
             pos_3d_triang=anim_triang[ii] - anim_triang[ii][:, 0:1,:]
-            # pos_3d_triang[:,0]=(pos_3d_triang[:,1]+pos_3d_triang[:,4])/2
+            
             bone_triang=np.mean(np.linalg.norm(pos_3d_triang[0,0,:]-pos_3d_triang[0,7,:],axis=-1))
             pos_3d_triang=pos_3d_triang*bone_real/bone_triang                
             pos_3d_triang-=pos_3d_triang[:,0:1,:]
-            # pos_3d_triang=pos_3d_triang[:,joints16]                                
+                                           
             positions_3d_triang.append(pos_3d_triang)
             if subject in ['S1','S5','S6','S7','S8']: 
                 n=len(pos_3d_triang)*num_joints
@@ -85,7 +82,7 @@ for subject in dataset_test.keys():
                 else:
                     N+=n
                     error+=numpy_nmpjpe(pos_3d_triang,pos_3d)*1000*n
-                    # print(numpy_nmpjpe(pos_3d_triang,pos_3d)*1000)
+                    
 
             ii+=1
         anim['positions_3d'] = positions_3d
@@ -94,13 +91,11 @@ print('Triangulation Error',error/N)
 keypoints = np.load('data/data_2d_h36m_ap.npz', allow_pickle=True)
 keypoints = keypoints['positions_2d'].item()
 
-# for subject in keypoints.keys():
-#     for action in keypoints[subject]:
+
 for subject in dataset_test.keys():
     assert subject in keypoints, 'Subject {} is missing from the 2D detections dataset'.format(subject)
     for action in dataset_test[subject].keys():
         action_corrected=correct_action[subject][action]
-        # action_corrected=action
         assert action_corrected in keypoints[subject], 'Action {} of subject {} is missing from the 2D detections dataset'.format(action, subject)
         if 'positions' not in dataset_test[subject][action]:
             continue
@@ -128,13 +123,7 @@ for subject in dataset_test.keys():
         confidences[subject][action_corrected]=[]
         kps_confs=keypoints[subject][action_corrected]
        
-        # rows1= np.mean(kps_confs[0][:,:,2],axis=1)>0
-        # rows2= np.mean(kps_confs[1][:,:,2],axis=1)>0
-        # rows3= np.mean(kps_confs[2][:,:,2],axis=1)>0
-        # rows4= np.mean(kps_confs[3][:,:,2],axis=1)>0
-        # rows=rows1*rows2*rows3*rows4
-        # print(np.sum(rows)/len(kps_conf[0]))
-        # plot_15j(np.concatenate((kps_confs[0][100:101,:,:2],kps_confs[1][100:101,:,:2],kps_confs[2][100:101,:,:2],kps_confs[3][100:101,:,:2]),axis=0))
+
         for cam_idx in range(4):
             # Normalize camera frame
             confidences[subject][action_corrected].append([])
@@ -143,33 +132,15 @@ for subject in dataset_test.keys():
             kps=kps[cam_idx][:,:,:2]
             # conf=conf[cam_idx][:,:,2]
             conf=np.ones((kps.shape[0],15))
-            # print(kps_confs[cam_idx].shape)
-            # print(cam_idx)
-            # 
-            
-            # if subject in ['S1','S5','S6','S7','S8']:   
-            #     kps=kps[rows]
-            #     conf=conf[rows]
-            #     dataset_test[subject][action]['positions_3d'][cam_idx]=dataset_test[subject][action]['positions_3d'][cam_idx][rows]
-            #     dataset_test[subject][action]['positions_triang'][cam_idx]=dataset_test[subject][action]['positions_triang'][cam_idx][rows]
-            #     n=len(dataset_test[subject][action]['positions_triang'][cam_idx])*num_joints
-            #     N+=n
-            #     if subject=='S5' and action in ['Sitting 1','Sitting']:
-            #         pass
-            #     else:
-            #         error+=numpy_nmpjpe(dataset_test[subject][action]['positions_triang'][cam_idx],dataset_test[subject][action]['positions_3d'][cam_idx])*1000*n
-            #     # print(subject,action)
-            #     # print(numpy_nmpjpe(dataset_test[subject][action]['positions_triang'][cam_idx],dataset_test[subject][action]['positions_3d'][cam_idx])*1000)
+
             kps = kps-kps[:,0:1]
-            
-            # kps = kps[:,joints16]
-            # kps[:,7]=(kps[:,0]+kps[:,8])/2
+
             kps=np.transpose(kps,[0,2,1])
             kps=kps.reshape(-1,num_joints*2)
             kps=kps/(np.linalg.norm(kps,ord=2,axis=1,keepdims=True)+0.0001)
             keypoints[subject][action_corrected][cam_idx] = kps
             confidences[subject][action_corrected][cam_idx] = conf
-# print('Triangulation Error',error/N)
+
 ####################################
 def fetch(subjects, action_filter=None, subset=1, parse_3d_poses=True):
     out_poses_3d = []
@@ -178,7 +149,6 @@ def fetch(subjects, action_filter=None, subset=1, parse_3d_poses=True):
     for subject in subjects:
         for action in dataset_test[subject].keys():
             action_corrected=correct_action[subject][action]
-            # action_corrected=action
             if action_filter is not None:
                 found = False
                 for a in action_filter:
@@ -218,13 +188,7 @@ def fetch_3dhp(data_path,keypoints):
         row=np.sum(np.abs(data2d[subject])>1,axis=(-1,-2))==0
         data_3d.append(data3d[subject][row]/1000)
         data_2d.append(data2d[subject][row])   
-        # if subject in ['TS3','TS4']:
-        #     data_3d.append(data3d[subject][100:]/1000)
-        #     data_2d.append(data2d[subject][100:])
-        # else:
-        #     data_3d.append(data3d[subject]/1000)
-        #     data_2d.append(data2d[subject])       
-        #      
+   
         
     return np.concatenate(data_3d[0],axis=0),np.concatenate(data_2d[0],axis=0)
 def create_2d_data_3dhp_test(data_path):
@@ -234,10 +198,7 @@ def create_2d_data_3dhp_test(data_path):
      
     for subject in keypoints.keys():
         print(subject)
-        # for ii in range(len(keypoints[subject])): 
-        # Normalize camera frame
 
-        # keypoints[subject][ii,:,:] = normalize_screen_coordinates(keypoints[subject][ii,:,:2], w=image_shape[subject][1], h=image_shape[subject][0])
         keypoints[subject] = keypoints[subject][:,[0,4,5,6,1,2,3,8,9,13,14,15,10,11,12],:] 
         keypoints[subject]= keypoints[subject][:,:,:] -keypoints[subject][:,:1,:]
         keypoints[subject] = np.transpose(keypoints[subject][:,:,:],(0,2,1))
@@ -313,18 +274,8 @@ def loss_weighted_rep_no_scale(p2d, p3d, confs):
     return loss
 
 # loading the H36M dataset
-
-# keypoints_test=create_2d_data_3dhp_test('data/data_3dhp_gt_test.npz')
-# mpi3dhp_3d,mpi3dhp_2d=fetch_3dhp('data/data_3dhp_gt_test.npz',keypoints_test)
-# # print(np.asarray(mpi3dhp_3d[0]).shape)
-# poses_3d_valid,poses_2d_valid=mpi3dhp_3d,mpi3dhp_2d
 poses_2d_valid, poses_conf_valid, poses_3d_valid= fetch(subjects=['S9', 'S11'])
 poses_3d_train, poses_2d_train,poses_2d_conf, subj_train= fetch_train(subjects=['S1', 'S5', 'S6', 'S7', 'S8'])
-# print(poses_3d_train[0].shape)
-# print(poses_3d_valid.shape)
-# plot_15j_3d(np.concatenate((poses_3d_train[0][100:101],poses_3d_valid[100:101]),axis=0))
-# print(poses_2d_train[0].shape)
-# print(subj_train.shape)
 my_dataset = H36MDataset(poses_3d_train,poses_2d_train,poses_2d_conf, subj_train, normalize_2d=True)
 my_dataset_test = H36MDataset_test(poses_2d_valid,  None, poses_3d_valid)
 train_loader = data.DataLoader(my_dataset, batch_size=config.BATCH_SIZE, shuffle=True, num_workers=0)
@@ -346,7 +297,7 @@ scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[30, 60, 90], g
 losses = SimpleNamespace()
 losses_mean = SimpleNamespace()
 
-############################################ Camera Intrinsics ##############################################
+
 K1=np.empty((3,3))
 f1=np.array([1145.0494384765625, 1143.7811279296875]) #"/1000 ";
 c1= np.array([512.54150390625, 515.4514770507812])#"/1000-np.array([512.54150390625, 515.4514770507812])/1000"; 
@@ -370,7 +321,7 @@ K4[0,0]=f4[0]; K4[1,1]=f4[1];K4[0,2]=c4[0]; K4[1,2]=c4[1]; K4[2,2]=1;
 
 K=np.zeros((4,3,3));K[0,:,:]=K1;K[1,:,:]=K2;K[2,:,:]=K3;K[3,:,:]=K4
 K=torch.from_numpy(K.astype('float32'))
-############################################ End of Human Projection Matrix #############################################
+
 
 cam_names = ['54138969', '55011271', '58860488', '60457274']
 all_cams = ['cam0', 'cam1', 'cam2', 'cam3']
@@ -389,7 +340,6 @@ if config.NoEval:
             out_poses_triang = torch.zeros((poses_3d['cam0_3d'].shape[0] * len(all_cams), num_joints,3)).cuda()
             inp_confidences = torch.zeros((poses_2d['cam0'].shape[0] * len(all_cams), num_joints)).cuda()
 
-            # poses_2d is a dictionary. It needs to be reshaped to be propagated through the model.
             cnt = 0
             for b in range(poses_2d['cam0'].shape[0]):
                 for c_idx, cam in enumerate(poses_2d):
@@ -398,21 +348,11 @@ if config.NoEval:
                     inp_confidences[cnt] = sample['confidences'][c_idx][b]
                     cnt += 1
 
-            # morph the poses using the skeleton morphing network
-            # inp_poses = model_skel_morph(inp_poses)
-            # print(inp_poses.shape)
-            # plot17j_2d(inp_poses[100:101].reshape(1,2,num_joints).transpose(2,1).cpu().detach().numpy())
-            # predict 3d poses
-            # print(inp_poses.shape)
-            # print(inp_confidences.shape)
+
             pred = model(inp_poses, inp_confidences)
             pred_poses = pred[0]
             pred_cam_angles = pred[1]
-            # pred_cam_t=pred[2]
 
-            # angles are in axis angle notation
-            # use Rodrigues formula (Equations 3 and 4) to get the rotation matrix
-            # pred_rot = rodrigues(pred_cam_angles)
             pred_rot=transform.euler_angles_to_matrix(pred_cam_angles,convention=['X','Y','Z'])
             
             # reproject to original cameras after applying rotation to the canonical poses
@@ -420,9 +360,7 @@ if config.NoEval:
             
             # triangulation loss
             losses.triang=mpjpe(rot_poses.transpose(2,1),out_poses_triang)
-            # A=out_poses_triang[100:101].detach().cpu().numpy()
-            # B=pred_poses.reshape(-1, 3, num_joints).transpose(2,1)[100:101].detach().cpu().numpy()
-            # plot17j(np.concatenate((A,B),axis=0), show_animation=False)
+
             rot_poses=rot_poses.reshape(-1, num_joints*3)
             # reprojection loss
             losses.rep = loss_weighted_rep_no_scale(inp_poses, rot_poses, inp_confidences)
@@ -438,17 +376,6 @@ if config.NoEval:
             inp_poses_rs2 = inp_poses_rs.reshape(-1, len(all_cams), 2,num_joints)
             inp_poses_rs2 = inp_poses_rs2.transpose(-2,-1)
             
-            # # Triangulate 
-            # P=np.zeros((4,3,4))
-            # # P[0,:,:]=P1;P[1,:,:]=P2 ;P[2,:,:]=P3 ;P[3,:,:]=P4 
-            # M=torch.cat((pred_rot_rs,pred_trans_rs.unsqueeze(-1)),dim=-1)
-            # K=K.repeat(pred_rot_rs.shape[0],1,1,1)
-            # P=torch.matmul(K.cuda(),M.cuda())
-            
-            # if epoch>0:
-            #     for batch_i in range(inp_poses_rs.shape[0]):
-            #         for joint in range(num_joints):                    
-            #             point3d[batch_i,joint,3]=triangulate_point_from_multiple_views_linear(P[batch_i].detach().cpu().numpy(), inp_poses_rs2[batch_i,:,joint,:].detach().cpu().numpy(), confidences_rs[batch_i,:,joint].detach().cpu().numpy())
             # view and camera consistency are computed in the same loop
             losses.view = 0
             losses.camera = 0
