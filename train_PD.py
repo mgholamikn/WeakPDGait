@@ -21,7 +21,7 @@ config = SimpleNamespace()
 config.learning_rate = 0.0001
 config.BATCH_SIZE = 8
 config.N_epochs = 10
-config.NoEval=False
+config.NoEval=True
 # weights for the different losses
 config.weight_rep = 1
 config.weight_view = 1
@@ -261,17 +261,12 @@ train_loader = data.DataLoader(my_dataset, batch_size=config.BATCH_SIZE, shuffle
 # test_loader = data.DataLoader(my_dataset_test, batch_size=1024 )
 # load the skeleton morphing model as defined in Section 4.2
 # for another joint detector it needs to be retrained -> train_skeleton_morph.py
-model_skel_morph = torch.load('models/model_skeleton_morph_S1_gh.pt')
-model_skel_morph.eval()
 
 # loading the lifting network
 model_teacher = model_confidences.Lifter().cuda()
 model = model_confidences.Lifter().cuda()
 model_eval=model_confidences.Lifter().cuda()
 params = list(model.parameters())
-checkpoint=torch.load('models/model_pretrain.pt')
-model_teacher.load_state_dict(checkpoint.state_dict())
-model.load_state_dict(checkpoint.state_dict())
 optimizer = optim.Adam(params, lr=config.learning_rate, weight_decay=1e-5)
 scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[30, 60, 90], gamma=0.1)
 
