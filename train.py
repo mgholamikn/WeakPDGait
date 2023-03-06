@@ -282,8 +282,7 @@ train_loader = data.DataLoader(my_dataset, batch_size=config.BATCH_SIZE, shuffle
 test_loader = data.DataLoader(my_dataset_test, batch_size=1000)
 # load the skeleton morphing model as defined in Section 4.2
 # for another joint detector it needs to be retrained -> train_skeleton_morph.py
-model_skel_morph = torch.load('models/model_skeleton_morph_S1_gh.pt')
-model_skel_morph.eval()
+
 
 # loading the lifting network
 model = model_confidences.Lifter().cuda()
