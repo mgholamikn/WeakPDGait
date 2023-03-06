@@ -267,6 +267,8 @@ model_teacher = model_confidences.Lifter().cuda()
 model = model_confidences.Lifter().cuda()
 model_eval=model_confidences.Lifter().cuda()
 params = list(model.parameters())
+checkpoint=torch.load('models/model_pretrain.pt')
+model_teacher.load_state_dict(checkpoint.state_dict())
 optimizer = optim.Adam(params, lr=config.learning_rate, weight_decay=1e-5)
 scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[30, 60, 90], gamma=0.1)
 
