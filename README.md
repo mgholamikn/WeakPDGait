@@ -19,13 +19,12 @@ To install pytorch3d please follow the instructions at <br>https://github.com/fa
 
 # 3D Humna Pose 
 
-Training on Human3.6M dataset. Please first download the data from <a href="https://drive.google.com/drive/folders/1YnIYQldiPAphX3gI4yzmbKPeSL_kiD6p?usp=share_link">here</a> and put in the ```/data``` directory.
+First train the 3D pose estimator on on Human3.6M dataset. Please first download the data from <a href="https://drive.google.com/drive/folders/1YnIYQldiPAphX3gI4yzmbKPeSL_kiD6p?usp=share_link">here</a> and put in the ```/data``` directory.
 ```
 python train.py
 ```
 
-# PD Labeling
-We can not provide our PD data due to the privacy issues. You can use your own data to train the network. Instrucitons on preparing custom data will be added.
+Then you need to fine-tune the pose estimator on your mulri-view data. We can not provide our PD data due to the privacy issues. You can use your own data to train the network. Instrucitons on preparing custom data will be added.
 ```
 python train_PD.py
 ```
