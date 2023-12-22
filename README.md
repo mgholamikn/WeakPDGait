@@ -3,7 +3,7 @@
 
 
 Implementation of <a href="https://www.sciencedirect.com/science/article/pii/S1361841523001317">"Automatic Labeling of Parkinson’s Disease Gait
-Videos with Weak Supervision"<\a>. 
+Videos with Weak Supervision"</a>. 
 
 <p align="center">.
 <img  src="Figures/tiser.jpg" width="800">
