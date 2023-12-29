@@ -31,3 +31,19 @@ Then you need to fine-tune the pose estimator on your multi-view data. We can no
 ```
 python train_PD.py
 ```
+
+Citation:
+
+```
+@article{GHOLAMI2023102871,
+title = {Automatic labeling of Parkinson’s Disease gait videos with weak supervision},
+journal = {Medical Image Analysis},
+volume = {89},
+pages = {102871},
+year = {2023},
+issn = {1361-8415},
+doi = {https://doi.org/10.1016/j.media.2023.102871},
+url = {https://www.sciencedirect.com/science/article/pii/S1361841523001317},
+author = {Mohsen Gholami and Rabab Ward and Ravneet Mahal and Maryam Mirian and Kevin Yen and Kye Won Park and Martin J. McKeown and Z. Jane Wang},
+}
+```
