@@ -32,6 +32,12 @@ Then you need to fine-tune the pose estimator on your multi-view data. We can no
 python train_PD.py
 ```
 
+# PD Gait Score
+
+Using the fine-tuned 3D Pose model you can use the ```PD_labeling.py``` to estimate gait scores.
+```
+python PD_labeling.py
+```
 Citation:
 
 ```
