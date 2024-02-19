@@ -474,9 +474,10 @@ for ii in range(len(subjects_PD)):
 
     data_Y=np.sum(weights*label_matrix,axis=1)
     
-    data_Y_train=np.delete(Y_true,ii,0)
+    # data_Y_train=np.delete(Y_true,ii,0)
     data_Y_test=data_Y[ii:ii+1]
-    data_X_train=np.delete(data_X[:,:15],ii,0)
+    # data_X_train=np.delete(data_X[:,:15],ii,0)
+    data_X_train=data_X
     data_X_test=data_X[ii:ii+1,:15]
     
     mu=np.mean(data_X_train,axis=0)
@@ -492,8 +493,7 @@ for ii in range(len(subjects_PD)):
     model.add(keras.layers.Dense(30, activation='relu'))
     model.add(keras.layers.Dense(1, activation='sigmoid'))
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-    model.fit(data_X_train,data_Y_train,batch_size=1,epochs=50,verbose=0)
-    model.fit(data_X_train,data_Y_train)
+    model.fit(data_X_train,data_Y,batch_size=1,epochs=50,verbose=0)
 
     y_pred=model.predict_proba(data_X_test)[0][1]
     y_true=Y_true[ii]
