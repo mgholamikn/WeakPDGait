@@ -443,8 +443,6 @@ for subj in subjects_PD:
         label_matrix[ii,0]=1
     if data[subj][7]<threshold_handROM_l:
         label_matrix[ii,0]=1
-    if data[subj][15]<threshold_gait_speed:
-        label_matrix[ii,8]=1
 
     ii+=1        
 from snorkel.labeling.model import LabelModel
@@ -477,7 +475,7 @@ for ii in range(len(subjects_PD)):
     # data_Y_train=np.delete(Y_true,ii,0)
     data_Y_test=data_Y[ii:ii+1]
     # data_X_train=np.delete(data_X[:,:15],ii,0)
-    data_X_train=data_X
+    data_X_train=data_X[:,:15]
     data_X_test=data_X[ii:ii+1,:15]
     
     mu=np.mean(data_X_train,axis=0)
@@ -495,7 +493,7 @@ for ii in range(len(subjects_PD)):
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     model.fit(data_X_train,data_Y,batch_size=1,epochs=50,verbose=0)
 
-    y_pred=model.predict_proba(data_X_test)[0][1]
+    y_pred=model.predict(data_X_test)[0][1]
     y_true=Y_true[ii]
     
     print(subjects_PD[ii],'pred',y_pred,'label',y_true)
@@ -503,8 +501,8 @@ for ii in range(len(subjects_PD)):
 
 accuracy=accuracy_score(Y_true,np.round(y_pred_tot))
 print('accuracy',accuracy)
-from sklearn.metrics import precision_recall_fscore_support
-print('Pre Rec F1:',precision_recall_fscore_support(Y_true, np.round(y_pred_tot), average='macro'))
+# from sklearn.metrics import precision_recall_fscore_support
+# print('Pre Rec F1:',precision_recall_fscore_support(Y_true, np.round(y_pred_tot), average='macro'))
 
 
 
